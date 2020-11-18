@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.SortedList
 import io.hung.githubuserbrowser.User
 import io.hung.githubuserbrowser.UserComparator
 import io.hung.githubuserbrowser.adapter.viewholder.UserVH
-import io.hung.githubuserbrowser.ui.searchuser.SearchUserViewModel
+import io.hung.githubuserbrowser.SearchUserViewModel
 
 class UserAdapter(private val viewModel: SearchUserViewModel) : RecyclerView.Adapter<UserVH>() {
 

@@ -10,7 +10,7 @@
             type="io.hung.githubuserbrowser.User" />
         <variable
             name="viewModel"
-            type="io.hung.githubuserbrowser.ui.searchuser.SearchUserViewModel" />
+            type="io.hung.githubuserbrowser.SearchUserViewModel" />
 
     </data>
 

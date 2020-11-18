@@ -14,7 +14,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import io.hung.githubuserbrowser.databinding.UserActivityBinding
-import io.hung.githubuserbrowser.ui.searchuser.SearchUserViewModel
 
 class UserActivity : AppCompatActivity() {
 
@@ -68,16 +67,22 @@ class UserActivity : AppCompatActivity() {
 
         findNavController(R.id.main_nav_host_fragment).let {
             it.addOnDestinationChangedListener { _, destination, _ ->
-                when (destination.id) {
-                    R.id.search_user_fragment -> {
-                        searchButton?.isVisible = true
-                    }
+                searchButton?.isVisible = when (destination.id) {
+                    R.id.search_user_fragment -> true
                     else -> {
-                        searchButton?.isVisible = false
+                        showToolbar()
+                        false
                     }
                 }
             }
             setupActionBarWithNavController(it, AppBarConfiguration.Builder(R.id.search_user_fragment).build())
+            binding.tbUserScreenToolbar.setNavigationOnClickListener {
+                findNavController(R.id.main_nav_host_fragment).navigateUp()
+            }
         }
+    }
+
+    private fun showToolbar() {
+        binding.abSearchUserAppbar.setExpanded(true, true)
     }
 }

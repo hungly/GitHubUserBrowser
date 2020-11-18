@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.hung.githubuserbrowser.User
 import io.hung.githubuserbrowser.databinding.UserItemBinding
-import io.hung.githubuserbrowser.ui.searchuser.SearchUserViewModel
+import io.hung.githubuserbrowser.SearchUserViewModel
 
 class UserVH(private val binding: UserItemBinding, viewModel: SearchUserViewModel) : RecyclerView.ViewHolder(binding.root) {
 

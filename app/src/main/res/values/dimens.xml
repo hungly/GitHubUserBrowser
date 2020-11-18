@@ -2,6 +2,7 @@
 <resources>
 
     <dimen name="user_avatar_size">64dp</dimen>
+    <dimen name="user_avatar_size_l">128dp</dimen>
     <dimen name="user_item_padding">8dp</dimen>
 
 </resources>

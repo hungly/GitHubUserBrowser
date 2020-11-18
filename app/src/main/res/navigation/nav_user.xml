@@ -8,7 +8,25 @@
     <fragment
         android:id="@+id/search_user_fragment"
         android:name="io.hung.githubuserbrowser.ui.searchuser.SearchUserFragment"
-        android:label="Search"
-        tools:layout="@layout/search_user_fragment" />
+        android:label="Search User"
+        tools:layout="@layout/search_user_fragment">
+
+        <action
+            android:id="@+id/action_search_user_fragment_to_user_detail_fragment"
+            app:destination="@id/user_detail_fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/user_detail_fragment"
+        android:name="io.hung.githubuserbrowser.ui.userdetail.UserDetailFragment"
+        android:label="User Detail"
+        tools:layout="@layout/user_detail_fragment">
+
+        <argument
+            android:name="selectedUser"
+            app:argType="io.hung.githubuserbrowser.User" />
+
+    </fragment>
 
 </navigation>
