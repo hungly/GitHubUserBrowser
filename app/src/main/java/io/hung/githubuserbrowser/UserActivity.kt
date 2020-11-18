@@ -4,23 +4,39 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
 import io.hung.githubuserbrowser.databinding.UserActivityBinding
+import io.hung.githubuserbrowser.di.injectViewModel
+import timber.log.Timber
+import javax.inject.Inject
 
-class UserActivity : AppCompatActivity() {
+class UserActivity : AppCompatActivity(), HasAndroidInjector {
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: UserViewModel by lazy {
+        injectViewModel(viewModelFactory)
+    }
 
     private lateinit var binding: UserActivityBinding
 
     private var searchButton: MenuItem? = null
-    private val viewModel: SearchUserViewModel by viewModels()
+
+    override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +73,8 @@ class UserActivity : AppCompatActivity() {
     private fun checkSearchIntent(intent: Intent) {
         if (Intent.ACTION_SEARCH == intent.action) {
             intent.getStringExtra(SearchManager.QUERY)?.also { query ->
-                Log.d("HUNGLY", query)
+                Timber.d(query)
+                viewModel.updateUsers()
             }
         }
     }

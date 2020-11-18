@@ -5,21 +5,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.hung.githubuserbrowser.R
-import io.hung.githubuserbrowser.SearchUserViewModel
 import io.hung.githubuserbrowser.UserDecoration
+import io.hung.githubuserbrowser.UserViewModel
 import io.hung.githubuserbrowser.adapter.UserAdapter
 import io.hung.githubuserbrowser.databinding.SearchUserFragmentBinding
+import io.hung.githubuserbrowser.di.Injectable
+import io.hung.githubuserbrowser.di.injectViewModel
+import javax.inject.Inject
 
-class SearchUserFragment : Fragment() {
+class SearchUserFragment : Fragment(), Injectable {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val adapter by lazy { UserAdapter(viewModel) }
+    private val viewModel: UserViewModel by lazy {
+        injectViewModel(viewModelFactory)
+    }
 
     private lateinit var binding: SearchUserFragmentBinding
-    private val adapter by lazy { UserAdapter(viewModel) }
-    private val viewModel: SearchUserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,12 +44,6 @@ class SearchUserFragment : Fragment() {
 
         setupObservers()
         setupViews()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.updateUsers()
     }
 
     private fun setupObservers() {
