@@ -5,13 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import io.hung.githubuserbrowser.R
+import io.hung.githubuserbrowser.UserDecoration
+import io.hung.githubuserbrowser.adapter.UserAdapter
 import io.hung.githubuserbrowser.databinding.SearchUserFragmentBinding
 
 class SearchUserFragment : Fragment() {
 
     private lateinit var binding: SearchUserFragmentBinding
-    private lateinit var viewModel: SearchUserViewModel
+    private val adapter by lazy { UserAdapter(viewModel) }
+    private val viewModel: SearchUserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,6 +30,28 @@ class SearchUserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(SearchUserViewModel::class.java)
+
+        setupObservers()
+        setupViews()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.updateUsers()
+    }
+
+    private fun setupObservers() {
+        viewModel.users.observe(viewLifecycleOwner, Observer {
+            if (it == null) return@Observer
+
+            adapter.updateUsers(it)
+        })
+    }
+
+    private fun setupViews() {
+        binding.rvSearchUser.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.rvSearchUser.adapter = adapter
+        binding.rvSearchUser.addItemDecoration(UserDecoration(resources.getDimensionPixelSize(R.dimen.user_item_padding)))
     }
 }

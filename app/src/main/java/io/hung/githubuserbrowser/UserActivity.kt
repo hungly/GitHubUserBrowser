@@ -7,18 +7,21 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import io.hung.githubuserbrowser.databinding.UserActivityBinding
+import io.hung.githubuserbrowser.ui.searchuser.SearchUserViewModel
 
 class UserActivity : AppCompatActivity() {
 
     private lateinit var binding: UserActivityBinding
 
     private var searchButton: MenuItem? = null
+    private val viewModel: SearchUserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
