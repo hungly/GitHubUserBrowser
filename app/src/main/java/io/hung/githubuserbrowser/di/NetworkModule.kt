@@ -25,184 +25,90 @@
 
 package io.hung.githubuserbrowser.di
 
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
 import dagger.Module
+import dagger.Provides
+import io.hung.githubuserbrowser.BuildConfig
+import io.hung.githubuserbrowser.api.model.ApiError
+import io.hung.githubuserbrowser.api.service.UserService
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
+import timber.log.Timber
+import java.util.concurrent.TimeUnit
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 class NetworkModule {
 
-//    @Singleton
-//    @Provides
-//    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
-//        HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
-//            override fun log(message: String) {
-//                Timber.d(message)
-//            }
-//        }).apply {
-//            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
-//        }
-//
-//    @Named(AUTHORIZED_HEADERS_INTERCEPTOR)
-//    @Singleton
-//    @Provides
-//    fun provideRefreshTokenInterceptor(
-//        localDataSource: UserLocalDataSource,
-//        @Named(STANDARD_HTTP_CLIENT) okHttpClient: OkHttpClient,
-//        moshiConverterFactory: MoshiConverterFactory
-//    ): Interceptor = object : Interceptor {
-//        override fun intercept(chain: Interceptor.Chain): Response = synchronized(this@NetworkModule) {
-//            val token = localDataSource.getUserToken()
-//            val originalRequest = chain.request()
-//            val initialResponse = token?.let {
-//                chain.proceed(
-//                    originalRequest.newBuilder()
-//                        .addHeader("Content-Type", "application/json")
-//                        .addHeader("Authorization", "Bearer $it")
-//                        .build()
-//                )
-//            } ?: chain.proceed(originalRequest)
-//
-//            when (initialResponse.code) {
-//                401 -> {
-//                    val refreshTokenResponse = runBlocking {
-//                        localDataSource.getUserRefreshToken()?.let {
-//                            provideApiService(okHttpClient, moshiConverterFactory, UserService::class.java)
-//                                .refreshToken(RefreshTokenRequest(refreshToken = it)).execute()
-//                        }
-//                    }
-//
-//                    when (refreshTokenResponse?.isSuccessful) {
-//                        false -> initialResponse
-//                        else -> {
-//                            initialResponse.close()
-//                            val refreshToken = refreshTokenResponse?.body()
-//                            refreshToken?.let {
-//                                localDataSource.updateUserToken(it)?.let { account ->
-//                                    localDataSource.saveUserAccount(account)
-//                                }
-//                                chain.proceed(
-//                                    originalRequest.newBuilder()
-//                                        .addHeader("Content-Type", "application/json")
-//                                        .addHeader("Authorization", "Bearer ${it.token}")
-//                                        .build()
-//                                )
-//                            } ?: initialResponse
-//                        }
-//                    }
-//                }
-//                else -> initialResponse
-//            }
-//        }
-//    }
-//
-//    @Named(STANDARD_HEADERS_INTERCEPTOR)
-//    @Singleton
-//    @Provides
-//    fun provideHttpHeaderInterceptor(): Interceptor = object : Interceptor {
-//        override fun intercept(chain: Interceptor.Chain): Response {
-//            val request = chain.request().newBuilder()
-//                .addHeader("Content-Type", "application/json")
-//                .build()
-//            return chain.proceed(request)
-//        }
-//    }
-//
-//    @Singleton
-//    @Provides
-//    fun provideMoshi(): Moshi = Moshi.Builder()
-//        .add(AccountJsonAdapter())
-//        .add(RefreshTokenJsonAdapter())
-//        .add(NewsJsonAdapter())
-//        .add(ProgrammeHighlightJsonAdapter())
-//        .add(PrayerRequestJsonAdapter())
-//        .build()
-//
-//    @Singleton
-//    @Provides
-//    fun provideMoshiAccountAdapter(): JsonAdapter<Account> =
-//        Moshi.Builder().add(AccountJsonAdapter()).build().adapter(Account::class.java)
-//
-//    @Singleton
-//    @Provides
-//    fun provideMoshiErrorResponseAdapter(): JsonAdapter<ErrorResponse> =
-//        Moshi.Builder().build().adapter(ErrorResponse::class.java)
-//
-//    @Singleton
-//    @Provides
-//    fun provideMoshiConverterFactory(moshi: Moshi): MoshiConverterFactory = MoshiConverterFactory.create(moshi)
-//
-//    @Named(STANDARD_HTTP_CLIENT)
-//    @Singleton
-//    @Provides
-//    fun provideOkHttpClient(
-//        httpLoggingInterceptor: HttpLoggingInterceptor,
-//        @Named(STANDARD_HEADERS_INTERCEPTOR) httpHeadersInterceptor: Interceptor
-//    ): OkHttpClient =
-//        OkHttpClient.Builder()
-//            .addInterceptor(httpLoggingInterceptor)
-//            .addInterceptor(httpHeadersInterceptor)
-//            .connectTimeout(BuildConfig.API_CONNECTION_TIMEOUT_MIN.toLong(), TimeUnit.MINUTES)
-//            .readTimeout(BuildConfig.API_READ_TIMEOUT_MIN.toLong(), TimeUnit.MINUTES)
-//            .writeTimeout(BuildConfig.API_WRITE_TIMEOUT_MIN.toLong(), TimeUnit.MINUTES)
-//            .build()
-//
-//    @Named(AUTHORIZED_HTTP_CLIENT)
-//    @Singleton
-//    @Provides
-//    fun provideAuthorizedOkHttpClient(
-//        httpLoggingInterceptor: HttpLoggingInterceptor,
-//        @Named(AUTHORIZED_HEADERS_INTERCEPTOR) httpHeadersInterceptor: Interceptor
-//    ): OkHttpClient {
-//        val dispatcher = Dispatcher()
-//        dispatcher.maxRequests = 1
-//        return OkHttpClient.Builder()
-//            .dispatcher(dispatcher)
-//            .addInterceptor(httpLoggingInterceptor)
-//            .addInterceptor(httpHeadersInterceptor)
-//            .connectTimeout(BuildConfig.API_CONNECTION_TIMEOUT_MIN.toLong(), TimeUnit.MINUTES)
-//            .readTimeout(BuildConfig.API_READ_TIMEOUT_MIN.toLong(), TimeUnit.MINUTES)
-//            .writeTimeout(BuildConfig.API_WRITE_TIMEOUT_MIN.toLong(), TimeUnit.MINUTES)
-//            .build()
-//    }
-//
-//    @Named(STANDARD_USER_SERVICE)
-//    @Singleton
-//    @Provides
-//    fun provideUserService(@Named(STANDARD_HTTP_CLIENT) okHttpClient: OkHttpClient, moshiConverterFactory: MoshiConverterFactory): UserService =
-//        provideApplicationService(okHttpClient, moshiConverterFactory, UserService::class.java)
-//
-//    @Named(AUTHORIZED_USER_SERVICE)
-//    @Singleton
-//    @Provides
-//    fun provideAuthorizedUserService(@Named(AUTHORIZED_HTTP_CLIENT) okHttpClient: OkHttpClient, moshiConverterFactory: MoshiConverterFactory): UserService =
-//        provideApiService(okHttpClient, moshiConverterFactory, UserService::class.java)
-//
-//    @Named(AUTHORIZED_NEWS_SERVICE)
-//    @Singleton
-//    @Provides
-//    fun provideNewsService(@Named(AUTHORIZED_HTTP_CLIENT) okHttpClient: OkHttpClient, moshiConverterFactory: MoshiConverterFactory): NewsService =
-//        provideApiService(okHttpClient, moshiConverterFactory, NewsService::class.java)
-//
-//    @Named(AUTHORIZED_PRAYER_REQUEST_SERVICE)
-//    @Singleton
-//    @Provides
-//    fun providePrayerRequestService(@Named(AUTHORIZED_HTTP_CLIENT) okHttpClient: OkHttpClient, moshiConverterFactory: MoshiConverterFactory): PrayerRequestService =
-//        provideApiService(okHttpClient, moshiConverterFactory, PrayerRequestService::class.java)
-//
-//    private fun provideApplicationRetrofit(okHttpClient: OkHttpClient, moshiConverterFactory: MoshiConverterFactory): Retrofit =
-//        Retrofit.Builder().baseUrl(BuildConfig.APPLICATION_URL)
-//            .client(okHttpClient)
-//            .addConverterFactory(moshiConverterFactory)
-//            .build()
-//
-//    private fun provideApiRetrofit(okHttpClient: OkHttpClient, moshiConverterFactory: MoshiConverterFactory): Retrofit =
-//        Retrofit.Builder().baseUrl(BuildConfig.API_URL)
-//            .client(okHttpClient)
-//            .addConverterFactory(moshiConverterFactory)
-//            .build()
-//
-//    private fun <T> provideApplicationService(okHttpClient: OkHttpClient, moshiConverterFactory: MoshiConverterFactory, clazz: Class<T>): T =
-//        provideApplicationRetrofit(okHttpClient, moshiConverterFactory).create(clazz)
-//
-//    private fun <T> provideApiService(okHttpClient: OkHttpClient, moshiConverterFactory: MoshiConverterFactory, clazz: Class<T>): T =
-//        provideApiRetrofit(okHttpClient, moshiConverterFactoryrterFactory).create(clazz)
+    @Singleton
+    @Provides
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
+            override fun log(message: String) {
+                Timber.d(message)
+            }
+        }).apply {
+            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+        }
+
+    @Singleton
+    @Provides
+    fun provideHttpHeaderInterceptor(@Named(ACCESS_TOKEN) accessToken: String): Interceptor = object : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val request = chain.request().newBuilder()
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "token $accessToken")
+                .build()
+            return chain.proceed(request)
+        }
+    }
+
+    @Singleton
+    @Provides
+    fun provideMoshi(): Moshi = Moshi.Builder()
+        .build()
+
+    @Singleton
+    @Provides
+    fun provideMoshiConverterFactory(moshi: Moshi): MoshiConverterFactory = MoshiConverterFactory.create(moshi)
+
+    @Singleton
+    @Provides
+    fun provideMoshiErrorResponseAdapter(): JsonAdapter<ApiError> =
+        Moshi.Builder().build().adapter(ApiError::class.java)
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(
+        httpLoggingInterceptor: HttpLoggingInterceptor,
+        httpHeadersInterceptor: Interceptor
+    ): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(httpHeadersInterceptor)
+            .connectTimeout(1, TimeUnit.MINUTES)
+            .readTimeout(1, TimeUnit.MINUTES)
+            .writeTimeout(1, TimeUnit.MINUTES)
+            .build()
+
+    @Singleton
+    @Provides
+    fun provideUserService(@Named(API_URL) apiUrl: String, okHttpClient: OkHttpClient, moshiConverterFactory: MoshiConverterFactory): UserService =
+        provideApiService(apiUrl, okHttpClient, moshiConverterFactory, UserService::class.java)
+
+
+    private fun provideApiRetrofit(apiUrl: String, okHttpClient: OkHttpClient, moshiConverterFactory: MoshiConverterFactory): Retrofit =
+        Retrofit.Builder().baseUrl(apiUrl)
+            .client(okHttpClient)
+            .addConverterFactory(moshiConverterFactory)
+            .build()
+
+    private fun <T> provideApiService(apiUrl: String, okHttpClient: OkHttpClient, moshiConverterFactory: MoshiConverterFactory, clazz: Class<T>): T =
+        provideApiRetrofit(apiUrl, okHttpClient, moshiConverterFactory).create(clazz)
 }

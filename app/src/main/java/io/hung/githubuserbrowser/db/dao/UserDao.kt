@@ -23,17 +23,23 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package io.hung.githubuserbrowser.di
+package io.hung.githubuserbrowser.db.dao
 
-import dagger.Module
+import androidx.room.*
+import io.hung.githubuserbrowser.api.model.User
 
-@Module(
-    includes = [
-        ViewModelModule::class,
-        CoreModule::class,
-        NetworkModule::class,
-        DatabaseModule::class
-    ]
-)
-class AppModule {
+@Dao
+interface UserDao {
+
+    @Query("SELECT * FROM user WHERE login = :userLogin")
+    fun get(userLogin: String): User
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(user: User)
+
+    @Delete
+    fun delete(user: User)
+
+    @Query("DELETE FROM user")
+    fun deleteAll()
 }

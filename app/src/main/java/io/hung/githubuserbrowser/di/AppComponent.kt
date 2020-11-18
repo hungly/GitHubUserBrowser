@@ -30,6 +30,7 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import io.hung.githubuserbrowser.GitHubUserBrowserApplication
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
@@ -49,6 +50,12 @@ interface AppComponent {
 
         @BindsInstance
         fun application(application: Application): Builder
+
+        @BindsInstance
+        fun accessToken(@Named(ACCESS_TOKEN) accessToken: String): Builder
+
+        @BindsInstance
+        fun apiUrl(@Named(API_URL) apiUrl: String): Builder
 
         fun build(): AppComponent
     }

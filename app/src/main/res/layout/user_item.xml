@@ -7,7 +7,8 @@
 
         <variable
             name="user"
-            type="io.hung.githubuserbrowser.User" />
+            type="io.hung.githubuserbrowser.api.model.User" />
+
         <variable
             name="viewModel"
             type="io.hung.githubuserbrowser.UserViewModel" />
@@ -42,25 +43,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@{user.name}"
+                android:layout_marginTop="16dp"
+                android:text="@{user.login}"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/iv_avatar"
                 app:layout_constraintTop_toTopOf="@id/iv_avatar"
                 tools:text="Name" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_user_handler"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:text="@{user.nick}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_avatar"
-                app:layout_constraintTop_toBottomOf="@id/tv_user_name"
-                tools:text="Nickname" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -23,17 +23,31 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package io.hung.githubuserbrowser.di
+package io.hung.githubuserbrowser.data
 
-import dagger.Module
+import com.squareup.moshi.JsonAdapter
+import io.hung.githubuserbrowser.api.model.ApiError
+import retrofit2.Response
+import timber.log.Timber
 
-@Module(
-    includes = [
-        ViewModelModule::class,
-        CoreModule::class,
-        NetworkModule::class,
-        DatabaseModule::class
-    ]
-)
-class AppModule {
+abstract class BaseDataSource(private val adapter: JsonAdapter<ApiError>) {
+
+    protected suspend fun <T> getResult(call: suspend () -> Response<T>): SourceResult<T> =
+        try {
+            val response = call()
+            if (response.isSuccessful) {
+                val body = response.body()
+                SourceResult.success(body)
+            } else {
+                val error = response.errorBody()?.let { adapter.fromJson(it.string()) }
+                error(response.code(), error?.message ?: response.errorBody()?.string() ?: response.message())
+            }
+        } catch (e: Exception) {
+            error(e.message ?: e.toString())
+        }
+
+    private fun <T> error(statusCode: Int?, errorMessage: String): SourceResult<T> {
+        Timber.e("Network call has failed for a following reason: $statusCode $errorMessage")
+        return SourceResult.error(errorMessage = errorMessage)
+    }
 }

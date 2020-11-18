@@ -23,17 +23,20 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package io.hung.githubuserbrowser.di
+package io.hung.githubuserbrowser.db
 
-import dagger.Module
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import io.hung.githubuserbrowser.api.model.User
+import io.hung.githubuserbrowser.db.dao.UserDao
 
-@Module(
-    includes = [
-        ViewModelModule::class,
-        CoreModule::class,
-        NetworkModule::class,
-        DatabaseModule::class
-    ]
+@Database(
+    entities = [
+        User::class,
+    ],
+    version = 1
 )
-class AppModule {
+abstract class GitHubUserBrowserDatabase : RoomDatabase() {
+
+    abstract fun userDao(): UserDao
 }

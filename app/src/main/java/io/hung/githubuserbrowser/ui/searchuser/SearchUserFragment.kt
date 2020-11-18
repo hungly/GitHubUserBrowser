@@ -13,6 +13,7 @@ import io.hung.githubuserbrowser.R
 import io.hung.githubuserbrowser.UserDecoration
 import io.hung.githubuserbrowser.UserViewModel
 import io.hung.githubuserbrowser.adapter.UserAdapter
+import io.hung.githubuserbrowser.data.SourceResult
 import io.hung.githubuserbrowser.databinding.SearchUserFragmentBinding
 import io.hung.githubuserbrowser.di.Injectable
 import io.hung.githubuserbrowser.di.injectViewModel
@@ -55,9 +56,16 @@ class SearchUserFragment : Fragment(), Injectable {
         })
 
         viewModel.users.observe(viewLifecycleOwner, Observer {
-            if (it == null) return@Observer
+            if (it.data == null) return@Observer
 
-            adapter.updateUsers(it)
+            when (it.status) {
+                SourceResult.Status.SUCCESS -> {
+                    adapter.addUsers(it.data.items)
+
+                    if (adapter.itemCount <= 1) binding.rvSearchUser.postDelayed({ binding.rvSearchUser.scrollToPosition(0) }, 500)
+                }
+                else -> Unit
+            }
         })
     }
 

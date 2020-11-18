@@ -74,7 +74,7 @@ class UserActivity : AppCompatActivity(), HasAndroidInjector {
         if (Intent.ACTION_SEARCH == intent.action) {
             intent.getStringExtra(SearchManager.QUERY)?.also { query ->
                 Timber.d(query)
-                viewModel.updateUsers()
+                viewModel.searchUsers(query)
             }
         }
     }

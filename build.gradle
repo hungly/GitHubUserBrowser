@@ -7,11 +7,21 @@ buildscript {
     // Dagger
     ext.dagger_ver = "2.28.3"
 
+    // JSON parser
+    ext.moshi_ver = "1.9.3"
+
     // Glide
     ext.glide_ver = "4.11.0"
 
     // Logging
     ext.timber_ver = "4.7.1"
+
+    // Retrofit
+    ext.okhttp_interceptor_ver = "4.4.1"
+    ext.retrofit_ver = "2.9.0"
+
+    // Room
+    ext.room_version = "2.2.5"
 
     repositories {
         google()

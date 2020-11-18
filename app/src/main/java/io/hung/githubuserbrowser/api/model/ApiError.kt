@@ -23,17 +23,11 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package io.hung.githubuserbrowser.di
+package io.hung.githubuserbrowser.api.model
 
-import dagger.Module
+import com.squareup.moshi.JsonClass
 
-@Module(
-    includes = [
-        ViewModelModule::class,
-        CoreModule::class,
-        NetworkModule::class,
-        DatabaseModule::class
-    ]
+@JsonClass(generateAdapter = true)
+data class ApiError(
+    val message: String
 )
-class AppModule {
-}

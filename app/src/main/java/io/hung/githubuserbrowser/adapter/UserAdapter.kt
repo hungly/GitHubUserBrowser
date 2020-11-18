@@ -3,7 +3,7 @@ package io.hung.githubuserbrowser.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
-import io.hung.githubuserbrowser.User
+import io.hung.githubuserbrowser.api.model.User
 import io.hung.githubuserbrowser.UserComparator
 import io.hung.githubuserbrowser.adapter.viewholder.UserVH
 import io.hung.githubuserbrowser.UserViewModel
@@ -20,7 +20,7 @@ class UserAdapter(private val viewModel: UserViewModel) : RecyclerView.Adapter<U
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserVH = UserVH.create(parent, viewModel)
 
-    fun updateUsers(newUsers: List<User>) {
+    fun addUsers(newUsers: List<User>) {
         userList.addAll(newUsers)
     }
 }

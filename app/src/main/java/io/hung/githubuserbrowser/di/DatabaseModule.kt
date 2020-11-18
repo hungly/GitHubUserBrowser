@@ -25,15 +25,25 @@
 
 package io.hung.githubuserbrowser.di
 
+import android.app.Application
+import androidx.room.Room
 import dagger.Module
+import dagger.Provides
+import io.hung.githubuserbrowser.db.GitHubUserBrowserDatabase
+import io.hung.githubuserbrowser.db.dao.UserDao
+import javax.inject.Singleton
 
-@Module(
-    includes = [
-        ViewModelModule::class,
-        CoreModule::class,
-        NetworkModule::class,
-        DatabaseModule::class
-    ]
-)
-class AppModule {
+@Module
+class DatabaseModule {
+
+    @Singleton
+    @Provides
+    fun provideDb(app: Application): GitHubUserBrowserDatabase = Room
+        .databaseBuilder(app, GitHubUserBrowserDatabase::class.java, "wesley.db")
+        .fallbackToDestructiveMigration()
+        .build()
+
+    @Singleton
+    @Provides
+    fun provideUserDao(db: GitHubUserBrowserDatabase): UserDao = db.userDao()
 }

@@ -23,17 +23,27 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package io.hung.githubuserbrowser.di
+package io.hung.githubuserbrowser.data.local
 
-import dagger.Module
+import io.hung.githubuserbrowser.api.model.User
+import io.hung.githubuserbrowser.db.dao.UserDao
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Module(
-    includes = [
-        ViewModelModule::class,
-        CoreModule::class,
-        NetworkModule::class,
-        DatabaseModule::class
-    ]
-)
-class AppModule {
+@Singleton
+class UserLocalDataSource @Inject constructor(private val userDao: UserDao) {
+
+    fun getUser(userLogin: String) = userDao.get(userLogin)
+
+    fun addUser(user: User) {
+        userDao.insert(user)
+    }
+
+    fun deletedUser(user: User) {
+        userDao.delete(user)
+    }
+
+    fun deleteAllUser() {
+        userDao.deleteAll()
+    }
 }

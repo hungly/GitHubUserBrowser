@@ -24,3 +24,6 @@
  */
 
 package io.hung.githubuserbrowser.di
+
+const val ACCESS_TOKEN = "access_token"
+const val API_URL = "api_url"

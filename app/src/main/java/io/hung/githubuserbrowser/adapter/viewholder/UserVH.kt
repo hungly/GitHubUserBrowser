@@ -3,7 +3,7 @@ package io.hung.githubuserbrowser.adapter.viewholder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import io.hung.githubuserbrowser.User
+import io.hung.githubuserbrowser.api.model.User
 import io.hung.githubuserbrowser.databinding.UserItemBinding
 import io.hung.githubuserbrowser.UserViewModel
 

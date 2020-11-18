@@ -62,12 +62,26 @@ dependencies {
     implementation "com.google.dagger:dagger-android:$dagger_ver"
     implementation "com.google.dagger:dagger-android-support:$dagger_ver"
 
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+
+    implementation "com.squareup.moshi:moshi:$moshi_ver"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_ver"
+
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_interceptor_ver"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_ver"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_ver"
+
     implementation "com.jakewharton.timber:timber:$timber_ver"
+
+    kapt "androidx.room:room-compiler:$room_version"
 
     kapt "com.github.bumptech.glide:compiler:$glide_ver"
 
     kapt "com.google.dagger:dagger-compiler:$dagger_ver"
     kapt "com.google.dagger:dagger-android-processor:$dagger_ver"
+
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_ver"
 
     testImplementation 'junit:junit:4.13.1'
 

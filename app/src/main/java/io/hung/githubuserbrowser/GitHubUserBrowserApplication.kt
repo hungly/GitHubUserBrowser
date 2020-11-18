@@ -42,7 +42,10 @@ class GitHubUserBrowserApplication : Application(), HasAndroidInjector {
 
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
-        AppInjector.init(this)
+        AppInjector.init(
+            resources.getString(R.string.github_api_url),
+            resources.getString(R.string.github_personal_access_token),
+            this)
     }
 
     override fun androidInjector() = dispatchingAndroidInjector

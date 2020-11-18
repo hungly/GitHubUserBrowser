@@ -23,17 +23,22 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package io.hung.githubuserbrowser.di
+package io.hung.githubuserbrowser.data.remote
 
-import dagger.Module
+import com.squareup.moshi.JsonAdapter
+import io.hung.githubuserbrowser.api.model.ApiError
+import io.hung.githubuserbrowser.api.service.UserService
+import io.hung.githubuserbrowser.data.BaseDataSource
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Module(
-    includes = [
-        ViewModelModule::class,
-        CoreModule::class,
-        NetworkModule::class,
-        DatabaseModule::class
-    ]
-)
-class AppModule {
+@Singleton
+class UserRemoteDataSource @Inject constructor(
+    adapter: JsonAdapter<ApiError>,
+    private val userService: UserService
+) : BaseDataSource(adapter) {
+
+    suspend fun getUser(userLogin: String) = getResult { userService.getUser(userLogin) }
+
+    suspend fun searchUsers(searchQuery: String, page: Int) = getResult { userService.searchUser(searchQuery, page) }
 }
