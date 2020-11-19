@@ -67,9 +67,14 @@ class SearchUserFragment : Fragment(), Injectable {
         viewModel.users.observe(viewLifecycleOwner, Observer {
             if (it.data == null) return@Observer
 
+            binding.tvEmpty.visibility = View.GONE
+
             when (it.status) {
                 SourceResult.Status.SUCCESS -> {
-                    adapter.addUsers(it.data.items)
+                    binding.tvNotFound.visibility = if (viewModel.getCurrentPage() == 1 && it.data.items.isEmpty()) View.VISIBLE
+                    else View.GONE
+
+                    adapter.newSearchResults(it.data.items)
 
                     if (adapter.itemCount <= 1) binding.rvSearchUser.postDelayed({ binding.rvSearchUser.scrollToPosition(0) }, 500)
                 }

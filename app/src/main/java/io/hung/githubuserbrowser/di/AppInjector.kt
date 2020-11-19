@@ -40,7 +40,7 @@ object AppInjector {
 
     fun init(
         apiUrl: String,
-        accessToken: String,
+        accessToken: String?,
         application: GitHubUserBrowserApplication
     ) {
         DaggerAppComponent.builder().application(application).accessToken(accessToken).apiUrl(apiUrl).build().inject(application)

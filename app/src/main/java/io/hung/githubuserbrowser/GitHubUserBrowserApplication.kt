@@ -44,7 +44,7 @@ class GitHubUserBrowserApplication : Application(), HasAndroidInjector {
 
         AppInjector.init(
             resources.getString(R.string.github_api_url),
-            resources.getString(R.string.github_personal_access_token),
+            null,
             this)
     }
 

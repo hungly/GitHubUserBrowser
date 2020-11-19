@@ -52,7 +52,7 @@ interface AppComponent {
         fun application(application: Application): Builder
 
         @BindsInstance
-        fun accessToken(@Named(ACCESS_TOKEN) accessToken: String): Builder
+        fun accessToken(@Named(ACCESS_TOKEN) accessToken: String?): Builder
 
         @BindsInstance
         fun apiUrl(@Named(API_URL) apiUrl: String): Builder

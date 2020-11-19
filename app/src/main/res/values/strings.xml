@@ -1,12 +1,12 @@
 <resources>
 
     <string name="github_api_url">https://api.github.com</string>
-<!--    <string name="github_personal_access_token">e754cf7dd0be71a9630d614f6d79966e0f3ffa93</string>-->
-    <string name="github_personal_access_token">84f9410a21d53c1012fa0b79499d22f1ebfdda47</string>
 
     <string name="app_name">GitHub User Browser</string>
     <string name="search_hint">Search by user\'s name</string>
     <string name="search_title">Search user</string>
+    <string name="search_empty">Enter a user name to begin search</string>
+    <string name="search_not_found">Nothing found</string>
 
     <string name="community_template">%d %s • %d %s</string>
     <string name="company_location_template">%s • %s</string>

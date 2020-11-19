@@ -59,11 +59,11 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideHttpHeaderInterceptor(@Named(ACCESS_TOKEN) accessToken: String): Interceptor = object : Interceptor {
+    fun provideHttpHeaderInterceptor(@Named(ACCESS_TOKEN) accessToken: String?): Interceptor = object : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val request = chain.request().newBuilder()
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "token $accessToken")
+//                .addHeader("Authorization", "token $accessToken")
                 .build()
             return chain.proceed(request)
         }
