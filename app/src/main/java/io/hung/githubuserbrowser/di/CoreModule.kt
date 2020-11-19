@@ -25,8 +25,24 @@
 
 package io.hung.githubuserbrowser.di
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import dagger.Module
+import dagger.Provides
+import io.hung.githubuserbrowser.R
+import javax.inject.Singleton
 
 @Module
 class CoreModule {
+
+    @Singleton
+    @Provides
+    fun provideRequestOptions() = RequestOptions.centerCropTransform()
+        .placeholder(R.drawable.ic_avatar_placeholder)
+        .fallback(R.drawable.ic_avatar_placeholder)
+        .error(R.drawable.ic_avatar_placeholder)
+
+    @Singleton
+    @Provides
+    fun provideCrossFadeTransitionOptions() = DrawableTransitionOptions.withCrossFade()
 }

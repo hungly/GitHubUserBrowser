@@ -24,8 +24,8 @@
         tools:layout="@layout/user_detail_fragment">
 
         <argument
-            android:name="selectedUser"
-            app:argType="io.hung.githubuserbrowser.api.model.User" />
+            android:name="selectedUserLogin"
+            app:argType="string" />
 
     </fragment>
 

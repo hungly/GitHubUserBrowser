@@ -5,9 +5,11 @@
 
     <data>
 
+        <import type="io.hung.githubuserbrowser.data.SourceResult.Status" />
+
         <variable
-            name="user"
-            type="io.hung.githubuserbrowser.api.model.User" />
+            name="viewModel"
+            type="io.hung.githubuserbrowser.ui.userdetail.UserDetailViewModel" />
 
     </data>
 
@@ -40,7 +42,7 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="center"
-                android:text="@{user.name}"
+                android:text="@{viewModel.selectedUser.data.name}"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:gravity="center"
-                android:text="@{user.login}"
+                android:text="@{viewModel.selectedUser.data.login}"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -82,14 +84,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_user_community"
-                tools:text="Follower . Following" />
+                tools:text="Company . Location" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_user_bio"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:text="@{user.bio}"
+                android:text="@{viewModel.selectedUser.data.bio}"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

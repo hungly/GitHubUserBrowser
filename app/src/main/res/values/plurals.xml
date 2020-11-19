@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <plurals name="follower">
+        <item quantity="zero">Follower</item>
+        <item quantity="one">Follower</item>
+        <item quantity="other">Followers</item>
+    </plurals>
+
+    <plurals name="following">
+        <item quantity="zero">Following</item>
+        <item quantity="one">Following</item>
+        <item quantity="other">Followings</item>
+    </plurals>
+
+</resources>

@@ -23,20 +23,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package io.hung.githubuserbrowser.di
+package io.hung.githubuserbrowser
 
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import io.hung.githubuserbrowser.ui.searchuser.SearchUserFragment
-import io.hung.githubuserbrowser.ui.userdetail.UserDetailFragment
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.module.AppGlideModule
 
-@Suppress("unused")
-@Module
-abstract class FragmentModule {
-
-    @ContributesAndroidInjector
-    abstract fun contributeSearchUserFragment(): SearchUserFragment
-
-    @ContributesAndroidInjector
-    abstract fun contributeUserDetailFragment(): UserDetailFragment
-}
+@GlideModule
+class GitHubUserBrowserGlideModule : AppGlideModule()

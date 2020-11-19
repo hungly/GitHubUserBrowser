@@ -9,9 +9,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import io.hung.githubuserbrowser.R
 import io.hung.githubuserbrowser.UserDecoration
 import io.hung.githubuserbrowser.UserViewModel
+import io.hung.githubuserbrowser.Utils
 import io.hung.githubuserbrowser.adapter.UserAdapter
 import io.hung.githubuserbrowser.data.SourceResult
 import io.hung.githubuserbrowser.databinding.SearchUserFragmentBinding
@@ -22,9 +25,15 @@ import javax.inject.Inject
 class SearchUserFragment : Fragment(), Injectable {
 
     @Inject
+    lateinit var imageRequestOptions: RequestOptions
+
+    @Inject
+    lateinit var transitionOptions: DrawableTransitionOptions
+
+    @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val adapter by lazy { UserAdapter(viewModel) }
+    private val adapter by lazy { UserAdapter(imageRequestOptions, transitionOptions, viewModel) }
     private val viewModel: UserViewModel by lazy {
         injectViewModel(viewModelFactory)
     }
@@ -51,7 +60,7 @@ class SearchUserFragment : Fragment(), Injectable {
         viewModel.selectedUser.observe(viewLifecycleOwner, Observer {
             if (it == null) return@Observer
 
-            findNavController().navigate(SearchUserFragmentDirections.actionSearchUserFragmentToUserDetailFragment(it))
+            findNavController().navigate(SearchUserFragmentDirections.actionSearchUserFragmentToUserDetailFragment(it.login))
             viewModel.doneNavigateToDetail()
         })
 
@@ -64,6 +73,7 @@ class SearchUserFragment : Fragment(), Injectable {
 
                     if (adapter.itemCount <= 1) binding.rvSearchUser.postDelayed({ binding.rvSearchUser.scrollToPosition(0) }, 500)
                 }
+                SourceResult.Status.ERROR -> Utils.showError(it.errorMessage, binding.root, resources)
                 else -> Unit
             }
         })

@@ -31,6 +31,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import io.hung.githubuserbrowser.UserViewModel
+import io.hung.githubuserbrowser.ui.userdetail.UserDetailViewModel
 import javax.inject.Singleton
 
 @Suppress("unused")
@@ -45,4 +46,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(UserViewModel::class)
     abstract fun bindMainViewModel(viewModel: UserViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UserDetailViewModel::class)
+    abstract fun bindUserDetailViewModel(viewModel: UserDetailViewModel): ViewModel
 }
