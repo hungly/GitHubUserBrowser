@@ -9,12 +9,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
-import io.hung.githubuserbrowser.R
-import io.hung.githubuserbrowser.UserDecoration
-import io.hung.githubuserbrowser.UserViewModel
-import io.hung.githubuserbrowser.Utils
+import io.hung.githubuserbrowser.*
 import io.hung.githubuserbrowser.adapter.UserAdapter
 import io.hung.githubuserbrowser.data.SourceResult
 import io.hung.githubuserbrowser.databinding.SearchUserFragmentBinding
@@ -68,15 +66,18 @@ class SearchUserFragment : Fragment(), Injectable {
             if (it.data == null) return@Observer
 
             binding.tvEmpty.visibility = View.GONE
+            binding.tvNotFound.visibility = View.GONE
 
             when (it.status) {
                 SourceResult.Status.SUCCESS -> {
-                    binding.tvNotFound.visibility = if (viewModel.getCurrentPage() == 1 && it.data.items.isEmpty()) View.VISIBLE
-                    else View.GONE
+                    viewModel.updateAvailablePage(it.data.totalCount / BuildConfig.USER_PER_PAGE)
+                    if (viewModel.getCurrentPage() == 1 && it.data.items.isEmpty()) binding.tvNotFound.visibility = View.VISIBLE
 
-                    adapter.newSearchResults(it.data.items)
-
-                    if (adapter.itemCount <= 1) binding.rvSearchUser.postDelayed({ binding.rvSearchUser.scrollToPosition(0) }, 500)
+                    if (viewModel.getCurrentPage() == 1) {
+                        adapter.newSearchResults(it.data.items)
+                    } else {
+                        adapter.addSearchResults(it.data.items)
+                    }
                 }
                 SourceResult.Status.ERROR -> Utils.showError(it.errorMessage, binding.root, resources)
                 else -> Unit
@@ -88,5 +89,20 @@ class SearchUserFragment : Fragment(), Injectable {
         binding.rvSearchUser.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.rvSearchUser.adapter = adapter
         binding.rvSearchUser.addItemDecoration(UserDecoration(resources.getDimensionPixelSize(R.dimen.user_item_padding)))
+
+        binding.rvSearchUser.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val totalItemCount = adapter.itemCount
+                val lastVisible = layoutManager.findLastVisibleItemPosition()
+
+                val endHasBeenReached = lastVisible + 5 >= totalItemCount;
+                if (viewModel.hasNextPage() && totalItemCount > 0 && endHasBeenReached) {
+                    viewModel.loadNextPage()
+                }
+            }
+        })
     }
 }

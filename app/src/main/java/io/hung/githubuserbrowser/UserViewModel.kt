@@ -17,6 +17,7 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
 
     private var currentQuery = ""
     private var currentPage = 1
+    private var availablePage = 1
 
     fun doneNavigateToDetail() {
         _selectedUser.postValue(null)
@@ -24,10 +25,11 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
 
     fun getCurrentPage() = currentPage
 
-    fun hasQuery() = currentQuery.isNotBlank() && currentQuery.isNotEmpty()
+    fun hasNextPage() = currentPage < availablePage
 
     fun loadNextPage() {
-        if (hasQuery()) userRepository.searchUser(query = currentQuery, page = ++currentPage, scope = viewModelScope)
+        currentPage++
+        if (hasQuery() && hasNextPage()) userRepository.searchUser(query = currentQuery, page = currentPage, scope = viewModelScope)
     }
 
     fun navigateToDetail(user: User) {
@@ -37,6 +39,13 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
     fun searchUsers(query: String) {
         currentQuery = query
         currentPage = 1
+        availablePage = 1
         if (hasQuery()) userRepository.searchUser(query = currentQuery, page = currentPage, scope = viewModelScope)
     }
+
+    fun updateAvailablePage(newAvailablePage: Int) {
+        availablePage = newAvailablePage
+    }
+
+    private fun hasQuery() = currentQuery.isNotBlank() && currentQuery.isNotEmpty()
 }
