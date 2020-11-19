@@ -31,6 +31,9 @@ import io.hung.githubuserbrowser.api.model.User
 @Dao
 interface UserDao {
 
+    @Query("SELECT * FROM user")
+    fun getAllUsers(): List<User>
+
     @Query("SELECT * FROM user WHERE login = :userLogin")
     fun get(userLogin: String): User
 
