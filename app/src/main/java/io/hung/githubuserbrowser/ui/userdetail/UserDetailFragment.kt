@@ -64,9 +64,7 @@ class UserDetailFragment : Fragment(), Injectable {
     }
 
     private fun setupObservers() {
-        viewModel.selectedUser.observe(viewLifecycleOwner, Observer {
-            if (it == null) return@Observer
-
+        viewModel.selectedUser.observe(viewLifecycleOwner, {
             when (it.status) {
                 SourceResult.Status.SUCCESS -> {
                     it.data?.let { user ->

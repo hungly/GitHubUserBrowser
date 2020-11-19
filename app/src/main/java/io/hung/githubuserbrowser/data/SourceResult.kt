@@ -73,7 +73,7 @@ fun <T> getResultIntoLiveData(
                 saveResult(networkResponse.data)
                 resultLiveData.postValue(networkResponse)
             } else if (networkResponse.status == SourceResult.Status.ERROR) {
-                resultLiveData.postValue(SourceResult.error(errorMessage = networkResponse.errorMessage))
+                resultLiveData.postValue(networkResponse)
             }
         } catch (e: Exception) {
             Timber.e(e)

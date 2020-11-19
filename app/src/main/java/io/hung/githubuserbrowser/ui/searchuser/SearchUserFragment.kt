@@ -62,21 +62,21 @@ class SearchUserFragment : Fragment(), Injectable {
             viewModel.doneNavigateToDetail()
         })
 
-        viewModel.users.observe(viewLifecycleOwner, Observer {
-            if (it.data == null) return@Observer
-
+        viewModel.users.observe(viewLifecycleOwner, {
             binding.tvEmpty.visibility = View.GONE
             binding.tvNotFound.visibility = View.GONE
 
             when (it.status) {
                 SourceResult.Status.SUCCESS -> {
-                    viewModel.updateAvailablePage(it.data.totalCount / BuildConfig.USER_PER_PAGE)
-                    if (viewModel.getCurrentPage() == 1 && it.data.items.isEmpty()) binding.tvNotFound.visibility = View.VISIBLE
+                    it.data?.let { result ->
+                        viewModel.updateAvailablePage(result.totalCount / BuildConfig.USER_PER_PAGE)
+                        if (viewModel.getCurrentPage() == 1 && result.items.isEmpty()) binding.tvNotFound.visibility = View.VISIBLE
 
-                    if (viewModel.getCurrentPage() == 1) {
-                        adapter.newSearchResults(it.data.items)
-                    } else {
-                        adapter.addSearchResults(it.data.items)
+                        if (viewModel.getCurrentPage() == 1) {
+                            adapter.newSearchResults(result.items)
+                        } else {
+                            adapter.addSearchResults(result.items)
+                        }
                     }
                 }
                 SourceResult.Status.ERROR -> Utils.showError(it.errorMessage, binding.root, resources)
@@ -98,7 +98,7 @@ class SearchUserFragment : Fragment(), Injectable {
                 val totalItemCount = adapter.itemCount
                 val lastVisible = layoutManager.findLastVisibleItemPosition()
 
-                val endHasBeenReached = lastVisible + 5 >= totalItemCount;
+                val endHasBeenReached = lastVisible + 5 >= totalItemCount
                 if (viewModel.hasNextPage() && totalItemCount > 0 && endHasBeenReached) {
                     viewModel.loadNextPage()
                 }
